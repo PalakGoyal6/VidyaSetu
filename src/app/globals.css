@@ -629,3 +629,16 @@ a:hover { color: var(--accent); }
 @media (max-width: 768px) {
   .page-header, .section { padding: 20px 16px; }
 }
+
+/* Low-Bandwidth Data Saver Mode for low-end Android phones */
+body.data-saver * {
+  animation-duration: 0.001ms !important;
+  transition-duration: 0.001ms !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+body.data-saver {
+  background: #0a0a14 !important;
+}
+

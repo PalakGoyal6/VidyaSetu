@@ -3,30 +3,79 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { BHASHINI_LANGUAGES, TRANSLATIONS } from '@/lib/data';
 
 const NAV_ITEMS = [
-  { href: '/', icon: '🏠', label: 'Home', labelHi: 'होम' },
-  { href: '/discover', icon: '🎙️', label: 'Discover', labelHi: 'खोजें' },
-  { href: '/learn', icon: '🗺️', label: 'Learn', labelHi: 'सीखें' },
-  { href: '/opportunities', icon: '🌟', label: 'Opportunities', labelHi: 'अवसर' },
-  { href: '/connect', icon: '🤝', label: 'Connect & Earn', labelHi: 'जुड़ें और कमाएं' },
-  { href: '/facilitator', icon: '👩‍🏫', label: 'Facilitator', labelHi: 'सुविधाकर्ता' },
+  { href: '/', icon: '🏠', key: 'home' },
+  { href: '/discover', icon: '🎙️', key: 'discover' },
+  { href: '/learn', icon: '🗺️', key: 'learn' },
+  { href: '/opportunities', icon: '🌟', key: 'opportunities' },
+  { href: '/connect', icon: '🤝', key: 'connect' },
+  { href: '/facilitator', icon: '👩‍🏫', key: 'facilitator' },
+  { href: '/interop', icon: '🔌', key: 'interop' },
 ];
 
 interface AppShellProps {
   children: React.ReactNode;
-  lang?: 'en' | 'hi';
-  onLangChange?: (lang: 'en' | 'hi') => void;
+  lang?: string;
+  onLangChange?: (lang: string) => void;
 }
 
 export default function AppShell({ children, lang = 'en', onLangChange }: AppShellProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
+  const [dataSaver, setDataSaver] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
 
-  useEffect(() => setMobileOpen(false), [pathname]);
+  const t = TRANSLATIONS[lang] || TRANSLATIONS['en'];
+  const currentLangObj = BHASHINI_LANGUAGES.find(l => l.id === lang) || BHASHINI_LANGUAGES[0];
+
+  useEffect(() => {
+    setMobileOpen(false);
+    setIsOnline(typeof navigator !== 'undefined' ? navigator.onLine : true);
+
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [pathname]);
+
+  const toggleDataSaver = () => {
+    const nextState = !dataSaver;
+    setDataSaver(nextState);
+    if (nextState) {
+      document.body.classList.add('data-saver');
+    } else {
+      document.body.classList.remove('data-saver');
+    }
+  };
 
   return (
     <div className="app-layout">
+      {/* Offline Alert Banner */}
+      {!isOnline && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999,
+          background: 'linear-gradient(90deg, #b45309, #d97706)',
+          color: 'white', padding: '6px 16px', fontSize: '0.8rem',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          boxShadow: '0 2px 10px rgba(0,0,0,0.5)',
+        }}>
+          <span>📶</span>
+          <span>{t.offlineNotice || 'Offline Mode Active • Saved locally for low-bandwidth rural connectivity'}</span>
+          <span style={{ background: 'rgba(0,0,0,0.2)', padding: '2px 8px', borderRadius: 10, fontSize: '0.7rem' }}>
+            Syncing Queued
+          </span>
+        </div>
+      )}
+
       {/* Mobile overlay */}
       {mobileOpen && (
         <div onClick={() => setMobileOpen(false)} style={{
@@ -39,6 +88,7 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
       <aside className="sidebar" style={{
         transform: mobileOpen ? 'translateX(0)' : undefined,
         display: 'flex',
+        marginTop: !isOnline ? 32 : 0,
       }}>
         {/* Logo */}
         <div style={{ padding: '0 24px 20px', borderBottom: '1px solid var(--bg-glass-border)' }}>
@@ -51,13 +101,21 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
             }}>V</div>
             <div>
               <div style={{ fontWeight: 800, color: 'white', lineHeight: 1.2 }}>VidyaSetu</div>
-              <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>विद्यासेतु</div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>विद्यासेतु • AI Platform</div>
             </div>
           </Link>
+          <div style={{
+            marginTop: 8, display: 'inline-flex', alignItems: 'center', gap: 6,
+            background: 'rgba(139, 92, 246, 0.15)', border: '1px solid rgba(139, 92, 246, 0.3)',
+            padding: '2px 8px', borderRadius: 12, fontSize: '0.65rem', color: '#c4b5fd',
+          }}>
+            <span>🗣️</span>
+            <span>BHASHINI AI Multi-Voice</span>
+          </div>
         </div>
 
         {/* Nav */}
-        <nav style={{ flex: 1, padding: '16px 0' }}>
+        <nav style={{ flex: 1, padding: '16px 0', overflowY: 'auto' }}>
           {NAV_ITEMS.map(item => (
             <Link
               key={item.href}
@@ -65,7 +123,7 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
               className={`sidebar-nav-item ${pathname === item.href ? 'active' : ''}`}
             >
               <span style={{ fontSize: '1.1rem' }}>{item.icon}</span>
-              <span>{lang === 'hi' ? item.labelHi : item.label}</span>
+              <span>{t[item.key] || item.key}</span>
               {pathname === item.href && (
                 <div style={{
                   marginLeft: 'auto', width: 6, height: 6, borderRadius: '50%',
@@ -76,30 +134,87 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
           ))}
         </nav>
 
-        {/* Bottom */}
-        <div style={{ padding: '16px 24px', borderTop: '1px solid var(--bg-glass-border)' }}>
+        {/* Data Saver Mode & BHASHINI Language Switcher */}
+        <div style={{ padding: '16px 20px', borderTop: '1px solid var(--bg-glass-border)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {/* Low Bandwidth Toggle */}
           <button
-            onClick={() => onLangChange?.(lang === 'en' ? 'hi' : 'en')}
+            onClick={toggleDataSaver}
             style={{
-              width: '100%', background: 'var(--bg-glass)', border: '1px solid var(--bg-glass-border)',
-              color: 'var(--text-secondary)', padding: '8px 12px', borderRadius: 8,
-              cursor: 'pointer', fontFamily: 'inherit', fontSize: '0.85rem',
-              display: 'flex', alignItems: 'center', gap: 8,
+              width: '100%', background: dataSaver ? 'rgba(16, 185, 129, 0.2)' : 'var(--bg-glass)',
+              border: `1px solid ${dataSaver ? 'var(--success)' : 'var(--bg-glass-border)'}`,
+              color: dataSaver ? 'var(--success)' : 'var(--text-secondary)',
+              padding: '6px 10px', borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit',
+              fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             }}>
-            🌐 {lang === 'en' ? 'हिंदी में बदलें' : 'Switch to English'}
+            <span>📶 {dataSaver ? 'Data Saver: ON' : 'Data Saver: OFF'}</span>
+            <span style={{ fontSize: '0.65rem', opacity: 0.8 }}>{dataSaver ? '2G/3G Lite' : 'Standard'}</span>
           </button>
-          <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 10 }}>
+
+          {/* BHASHINI Regional Languages Dropdown */}
+          <div style={{ position: 'relative' }}>
+            <button
+              onClick={() => setShowLangMenu(!showLangMenu)}
+              style={{
+                width: '100%', background: 'var(--bg-glass)', border: '1px solid var(--bg-glass-border)',
+                color: 'var(--text-primary)', padding: '8px 12px', borderRadius: 8,
+                cursor: 'pointer', fontFamily: 'inherit', fontSize: '0.85rem',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span>🌐</span>
+                <span style={{ fontWeight: 600 }}>{currentLangObj.native}</span>
+              </span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>BHASHINI ▾</span>
+            </button>
+
+            {showLangMenu && (
+              <div style={{
+                position: 'absolute', bottom: '105%', left: 0, right: 0,
+                background: 'var(--bg-card)', border: '1px solid var(--bg-glass-border)',
+                borderRadius: 10, padding: 6, zIndex: 100, boxShadow: 'var(--shadow-lg)',
+                maxHeight: 220, overflowY: 'auto',
+              }}>
+                <div style={{ padding: '4px 8px', fontSize: '0.7rem', color: 'var(--text-muted)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  Bhashini Language Mission
+                </div>
+                {BHASHINI_LANGUAGES.map(l => (
+                  <button
+                    key={l.id}
+                    onClick={() => {
+                      onLangChange?.(l.id);
+                      setShowLangMenu(false);
+                    }}
+                    style={{
+                      width: '100%', background: lang === l.id ? 'rgba(79,70,229,0.3)' : 'transparent',
+                      border: 'none', color: 'var(--text-primary)', padding: '8px 10px',
+                      borderRadius: 6, cursor: 'pointer', textAlign: 'left', fontSize: '0.82rem',
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    }}>
+                    <span>{l.native}</span>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{l.name}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* User profile pill */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4 }}>
             <div className="avatar" style={{ width: 32, height: 32, fontSize: '0.8rem' }}>RK</div>
-            <div>
+            <div style={{ flex: 1 }}>
               <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)' }}>Ravi Kumar</div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Class 10 • UP</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Class 10 • UP (Govt School)</div>
             </div>
+            <span style={{
+              width: 8, height: 8, borderRadius: '50%',
+              background: isOnline ? 'var(--success)' : 'var(--warning)',
+            }} title={isOnline ? 'Online' : 'Offline'} />
           </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="main-content">
+      <main className="main-content" style={{ marginTop: !isOnline ? 32 : 0 }}>
         {/* Mobile top bar */}
         <div style={{
           display: 'none',
@@ -113,9 +228,9 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
           }}>☰</button>
           <span style={{ fontWeight: 700 }}>VidyaSetu</span>
           <button
-            onClick={() => onLangChange?.(lang === 'en' ? 'hi' : 'en')}
+            onClick={() => setShowLangMenu(!showLangMenu)}
             style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem' }}>
-            🌐 {lang === 'en' ? 'हिं' : 'EN'}
+            🌐 {currentLangObj.flag}
           </button>
         </div>
         {children}

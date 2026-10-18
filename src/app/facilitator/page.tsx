@@ -31,7 +31,7 @@ interface Module {
 }
 
 export default function FacilitatorPage() {
-  const [lang, setLang] = useState<'en' | 'hi'>('en');
+  const [lang, setLang] = useState<string>('en');
   const [activeTab, setActiveTab] = useState<'dashboard' | 'students' | 'modules' | 'create'>('dashboard');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [moduleForm, setModuleForm] = useState({ title: '', subject: '', duration: '', pricing: 'free', price: '' });

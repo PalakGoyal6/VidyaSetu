@@ -32,7 +32,8 @@ interface Pathway {
 }
 
 function LearnPageContent() {
-  const [lang, setLang] = useState<'en' | 'hi'>('en');
+  const [lang, setLang] = useState<string>('en');
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const searchParams = useSearchParams();
   const [selectedCareerId, setSelectedCareerId] = useState(searchParams.get('career') || '');
   const [pathway, setPathway] = useState<Pathway | null>(null);
@@ -40,6 +41,23 @@ function LearnPageContent() {
   const [activePhase, setActivePhase] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
+
+  const handleSpeak = (text: string) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = lang === 'hi' ? 'hi-IN' : 'en-IN';
+    utterance.rate = 0.9;
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+    window.speechSynthesis.speak(utterance);
+  };
 
   const categories = ['All', 'Technology', 'Vocational', 'Healthcare', 'Agriculture', 'Creative', 'Education', 'Commerce'];
 
@@ -176,10 +194,21 @@ function LearnPageContent() {
                     <p style={{ color: 'var(--text-muted)', marginBottom: 16 }}>
                       {lang === 'hi' ? 'आपका व्यक्तिगत सीखने का रोडमैप' : 'Your personalized learning roadmap'}
                     </p>
-                    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
                       <span className="badge badge-success">💰 {pathway.avgSalary}</span>
                       <span className="badge badge-accent">⏱️ {pathway.estimatedTime}</span>
                       <span className="badge badge-primary">📈 {pathway.demand} Demand</span>
+                      <button
+                        onClick={() => handleSpeak(`${pathway.careerTitle}. Estimated time: ${pathway.estimatedTime}. Average salary: ${pathway.avgSalary}. Key skills required: ${pathway.skills.join(', ')}.`)}
+                        style={{
+                          background: isSpeaking ? 'var(--accent)' : 'var(--bg-glass)',
+                          border: '1px solid var(--bg-glass-border)', borderRadius: 20,
+                          padding: '4px 12px', color: 'white', cursor: 'pointer', fontSize: '0.8rem',
+                          display: 'inline-flex', alignItems: 'center', gap: 6,
+                        }}>
+                        <span>{isSpeaking ? '⏹️' : '🔊'}</span>
+                        <span>{isSpeaking ? 'Stop Voice' : 'Listen Roadmap'}</span>
+                      </button>
                     </div>
                   </div>
                 </div>

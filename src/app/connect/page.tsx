@@ -21,7 +21,7 @@ interface Mentor {
 }
 
 export default function ConnectPage() {
-  const [lang, setLang] = useState<'en' | 'hi'>('en');
+  const [lang, setLang] = useState<string>('en');
   const [mentors, setMentors] = useState<Mentor[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null);

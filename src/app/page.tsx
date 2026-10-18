@@ -64,11 +64,20 @@ export default function HomePage() {
       color: '#fbbf24',
       badge: lang === 'hi' ? 'PWA • ऑफलाइन' : 'PWA • Offline First',
     },
+    {
+      icon: '🔌',
+      title: lang === 'hi' ? 'ओपन API और इंटरऑपरेबिलिटी' : 'Open APIs & Interoperability',
+      desc: lang === 'hi' ? 'कॉलेज (AISHE), नियोक्ता (NAPS) और एनजीओ के लिए ओपन स्टैंडर्ड्स।' : 'Standards-based REST APIs connecting Colleges, Employers, NGOs & Govt portals.',
+      href: '/interop',
+      color: '#38bdf8',
+      badge: lang === 'hi' ? 'REST API' : 'REST API v1',
+    },
   ];
 
   const govtPartners = [
     { name: 'DIKSHA', icon: '📖', color: '#4f46e5' },
     { name: 'SWAYAM', icon: '🎓', color: '#7c3aed' },
+    { name: 'AISHE', icon: '🏛️', color: '#0ea5e9' },
     { name: 'Skill India', icon: '🛠️', color: '#f97316' },
     { name: 'NAPS', icon: '🏭', color: '#10b981' },
     { name: 'NSP', icon: '📜', color: '#3b82f6' },
