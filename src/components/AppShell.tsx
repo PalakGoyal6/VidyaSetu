@@ -12,7 +12,6 @@ const NAV_ITEMS = [
   { href: '/opportunities', icon: '🌟', key: 'opportunities' },
   { href: '/connect', icon: '🤝', key: 'connect' },
   { href: '/facilitator', icon: '👩‍🏫', key: 'facilitator' },
-  { href: '/interop', icon: '🔌', key: 'interop' },
 ];
 
 interface AppShellProps {
