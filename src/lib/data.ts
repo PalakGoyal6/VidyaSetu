@@ -1,0 +1,344 @@
+// VidyaSetu - Knowledge Base Data
+// Real-data grounded in Indian government initiatives
+
+export const CAREERS = [
+  // STEM
+  { id: "software-dev", title: "Software Developer", titleHi: "सॉफ्टवेयर डेवलपर", category: "Technology", icon: "💻", avgSalary: "₹3.5-8L/yr", demand: "Very High", path: ["Class 10 Math/Science", "Coding Bootcamp / B.Tech", "Internship at Tech Company"], skills: ["Programming", "Problem Solving", "Logical Thinking"], exams: ["JEE Main", "CUET", "State CET"], courses: ["SWAYAM: Introduction to Programming", "DIKSHA: Computer Science"], schemeIds: ["pmegp", "naps"] },
+  { id: "data-analyst", title: "Data Analyst", titleHi: "डेटा विश्लेषक", category: "Technology", icon: "📊", avgSalary: "₹4-10L/yr", demand: "Very High", path: ["Math + Stats foundation", "Python/Excel skills", "Data projects portfolio"], skills: ["Statistics", "Excel", "Python", "SQL"], exams: ["CUET", "BBA/BCA entrance"], courses: ["SWAYAM: Data Science for Engineers", "DIKSHA: Mathematics"], schemeIds: ["skill-india", "pmkvy"] },
+  { id: "agri-tech", title: "Agricultural Technologist", titleHi: "कृषि प्रौद्योगिकीविद", category: "Agriculture", icon: "🌾", avgSalary: "₹2.5-5L/yr", demand: "High", path: ["Agriculture science in Class 11", "B.Sc Agriculture", "Govt farm research job"], skills: ["Crop Science", "Technology", "Soil Analysis"], exams: ["ICAR AIEEA", "State Agriculture Exams"], courses: ["SWAYAM: Sustainable Agriculture"], schemeIds: ["pm-kisan", "nabard"] },
+
+  // Healthcare
+  { id: "nurse", title: "Nursing Professional", titleHi: "नर्सिंग पेशेवर", category: "Healthcare", icon: "🏥", avgSalary: "₹2-4.5L/yr", demand: "Very High", path: ["Biology in Class 11-12", "GNM / B.Sc Nursing", "Hospital internship"], skills: ["Patient Care", "Medical Knowledge", "Empathy"], exams: ["NEET", "State Nursing Entrance"], courses: ["SWAYAM: Fundamentals of Nursing"], schemeIds: ["naps", "national-scholarship"] },
+  { id: "health-worker", title: "Community Health Worker", titleHi: "सामुदायिक स्वास्थ्य कार्यकर्ता", category: "Healthcare", icon: "💊", avgSalary: "₹1.8-3L/yr", demand: "High", path: ["Any stream Class 12", "ASHA/ANM training", "Join government health programme"], skills: ["Communication", "First Aid", "Record Keeping"], exams: ["ASHA Selection", "ANM Entrance"], courses: ["NHM Training Modules"], schemeIds: ["nhm", "national-scholarship"] },
+
+  // Vocational / Trades
+  { id: "electrician", title: "Industrial Electrician", titleHi: "औद्योगिक इलेक्ट्रीशियन", category: "Vocational", icon: "⚡", avgSalary: "₹2-4L/yr", demand: "Very High", path: ["ITI Electrician Trade (2 yr)", "NAPS Apprenticeship", "Self-employment or industry job"], skills: ["Wiring", "Safety Protocols", "Motor Repair"], exams: ["ITI Entrance", "NCVT"], courses: ["Skill India: Electrician Trade", "DIKSHA ITI Content"], schemeIds: ["naps", "pmegp"] },
+  { id: "beautician", title: "Beauty & Wellness Professional", titleHi: "सौंदर्य और स्वास्थ्य पेशेवर", category: "Vocational", icon: "💅", avgSalary: "₹1.5-4L/yr", demand: "High", path: ["Beauty therapy certification", "Skill India short course", "Own salon or join chain"], skills: ["Skincare", "Hair Styling", "Customer Service"], exams: ["NSQF Level 3/4"], courses: ["PMKVY: Beauty & Wellness Sector"], schemeIds: ["pmkvy", "mudra"] },
+  { id: "welder", title: "Welding Technician", titleHi: "वेल्डिंग तकनीशियन", category: "Vocational", icon: "🔧", avgSalary: "₹2-5L/yr", demand: "Very High", path: ["ITI Welder Trade (1 yr)", "NAPS Apprenticeship", "Industry or self-employment"], skills: ["Welding Techniques", "Safety", "Metal Fabrication"], exams: ["ITI Entrance", "NCVT"], courses: ["Skill India: Welder NSQF Level 3"], schemeIds: ["naps", "pmegp"] },
+  { id: "mobile-repair", title: "Mobile & Electronics Repair", titleHi: "मोबाइल मरम्मत तकनीशियन", category: "Vocational", icon: "📱", avgSalary: "₹1.8-4L/yr", demand: "Very High", path: ["PMKVY short course (3 months)", "Apprenticeship at service center", "Own repair shop"], skills: ["Electronics", "Troubleshooting", "Customer Service"], exams: ["NSQF Assessment"], courses: ["PMKVY: Electronics Sector"], schemeIds: ["pmkvy", "mudra"] },
+
+  // Creative / Media
+  { id: "graphic-designer", title: "Graphic Designer", titleHi: "ग्राफिक डिज़ाइनर", category: "Creative", icon: "🎨", avgSalary: "₹2.5-7L/yr", demand: "High", path: ["Design tools self-learning", "UIDAI Design Certificate or Diploma", "Freelance or agency work"], skills: ["Creativity", "Photoshop", "Communication"], exams: ["NID Entrance", "State Design Institutes"], courses: ["SWAYAM: Design Thinking"], schemeIds: ["startup-india", "mudra"] },
+  { id: "content-creator", title: "Digital Content Creator", titleHi: "डिजिटल कंटेंट क्रिएटर", category: "Creative", icon: "📸", avgSalary: "₹1.5-6L/yr", demand: "High", path: ["Social media presence", "Video/photography skills", "Brand collaborations & monetize"], skills: ["Storytelling", "Video Editing", "Marketing"], exams: ["No formal exam needed"], courses: ["SWAYAM: Digital Marketing"], schemeIds: ["startup-india", "mudra"] },
+  { id: "yoga-trainer", title: "Yoga & Wellness Trainer", titleHi: "योग प्रशिक्षक", category: "Wellness", icon: "🧘", avgSalary: "₹2-5L/yr", demand: "High", path: ["Yoga Teacher Training (200hr)", "Certification from QCI", "Conduct classes or online sessions"], skills: ["Yoga", "Teaching", "Anatomy basics"], exams: ["QCI Yoga Examinations"], courses: ["Ministry of AYUSH Training"], schemeIds: ["pmkvy", "mudra"] },
+
+  // Education / Social
+  { id: "teacher", title: "School Teacher", titleHi: "स्कूल शिक्षक", category: "Education", icon: "📚", avgSalary: "₹2.5-6L/yr", demand: "High", path: ["B.Ed / D.El.Ed after graduation", "CTET/State TET qualification", "Government or private school posting"], skills: ["Subject Knowledge", "Communication", "Patience"], exams: ["CTET", "State TET", "B.Ed Entrance"], courses: ["SWAYAM: Education Technology", "DIKSHA Teacher Training"], schemeIds: ["national-scholarship", "pm-scholarship"] },
+  { id: "social-worker", title: "Social Worker / NGO Professional", titleHi: "समाज सेवक", category: "Social", icon: "🤝", avgSalary: "₹2-4L/yr", demand: "Medium", path: ["BA Social Work or any degree", "NGO internship", "Field work in community"], skills: ["Empathy", "Communication", "Project Management"], exams: ["MSW Entrance", "CUET"], courses: ["SWAYAM: Social Work Practice"], schemeIds: ["national-scholarship"] },
+
+  // Business / Commerce
+  { id: "accountant", title: "Accounting Professional", titleHi: "लेखाकार", category: "Commerce", icon: "💰", avgSalary: "₹2.5-6L/yr", demand: "High", path: ["Commerce in Class 11-12", "B.Com or CA Foundation", "Firm internship / industry job"], skills: ["Mathematics", "Tally", "Attention to Detail"], exams: ["CA Foundation", "CUET Commerce", "CMA"], courses: ["SWAYAM: Accountancy", "ICAI Online Courses"], schemeIds: ["national-scholarship", "pm-scholarship"] },
+  { id: "entrepreneur", title: "Entrepreneur / Small Business Owner", titleHi: "उद्यमी", category: "Business", icon: "🚀", avgSalary: "Variable", demand: "Always", path: ["Identify local opportunity", "PMEGP / Mudra loan", "Build and scale business"], skills: ["Business Planning", "Marketing", "Resilience"], exams: ["No fixed exam"], courses: ["SWAYAM: Entrepreneurship", "NSIC Training"], schemeIds: ["pmegp", "mudra", "startup-india"] },
+  { id: "fashion-design", title: "Fashion Designer / Tailor Entrepreneur", titleHi: "फैशन डिज़ाइनर", category: "Creative", icon: "👗", avgSalary: "₹1.5-6L/yr", demand: "High", path: ["NIFT / State fashion school", "PMKVY Apparel course", "Own boutique or brand"], skills: ["Sewing", "Design", "Trend Awareness"], exams: ["NIFT Entrance", "NSQF Apparel Assessment"], courses: ["PMKVY: Apparel Sector"], schemeIds: ["pmkvy", "mudra"] },
+  { id: "driver-logistics", title: "Commercial Driver / Logistics", titleHi: "वाणिज्यिक चालक / लॉजिस्टिक्स", category: "Transport", icon: "🚛", avgSalary: "₹2-4.5L/yr", demand: "Very High", path: ["Heavy Vehicle License (HMV)", "NAPS with logistics company", "Permanent job or own vehicle"], skills: ["Driving", "Navigation", "Time Management"], exams: ["Driving License HMV", "NSQF Transport"], courses: ["PMKVY: Automotive Sector"], schemeIds: ["naps", "pmegp"] },
+  { id: "food-processing", title: "Food Processing Technician", titleHi: "खाद्य प्रसंस्करण तकनीशियन", category: "Food & Agriculture", icon: "🥫", avgSalary: "₹1.8-3.5L/yr", demand: "High", path: ["PMKVY Food Processing course", "NAPS with food company", "Start own food business"], skills: ["Food Safety", "Processing Techniques", "Quality Control"], exams: ["NSQF Level 3/4 Assessment"], courses: ["PMKVY: Food Processing Sector"], schemeIds: ["pmkvy", "pmegp", "mudra"] },
+];
+
+export const SCHEMES = [
+  {
+    id: "national-scholarship",
+    name: "National Scholarship Portal",
+    nameHi: "राष्ट्रीय छात्रवृत्ति पोर्टल",
+    category: "Scholarship",
+    icon: "🎓",
+    amount: "₹5,000 - ₹50,000/yr",
+    eligibility: "Students from Class 9 to Post-Graduation, family income below ₹2.5L/yr",
+    deadline: "October 31, 2026",
+    link: "https://scholarships.gov.in",
+    tags: ["All Streams", "Class 9-12", "Graduation"],
+    description: "India's one-stop platform for all central and state government scholarships with direct bank transfer."
+  },
+  {
+    id: "pmkvy",
+    name: "Pradhan Mantri Kaushal Vikas Yojana",
+    nameHi: "प्रधान मंत्री कौशल विकास योजना",
+    category: "Skill Training",
+    icon: "🛠️",
+    amount: "Free Training + ₹8,000 reward",
+    eligibility: "Indian nationals aged 15-45, any educational background",
+    deadline: "Rolling Admissions",
+    link: "https://www.pmkvyofficial.org",
+    tags: ["Vocational", "Free Training", "Certificate"],
+    description: "Free short-term skill training across 37 sectors with industry-recognized certification and cash reward."
+  },
+  {
+    id: "naps",
+    name: "National Apprenticeship Promotion Scheme",
+    nameHi: "राष्ट्रीय शिक्षुता संवर्धन योजना",
+    category: "Apprenticeship",
+    icon: "🏭",
+    amount: "Stipend ₹5,000-10,000/month",
+    eligibility: "Passed Class 5 or above, 14-21 years of age",
+    deadline: "Rolling",
+    link: "https://apprenticeshipindia.org",
+    tags: ["Apprenticeship", "Industry", "Stipend"],
+    description: "Learn on-the-job with real companies, earn a stipend, and get NCVT-recognized apprenticeship certificate."
+  },
+  {
+    id: "pmegp",
+    name: "PM Employment Generation Programme",
+    nameHi: "प्रधान मंत्री रोजगार सृजन कार्यक्रम",
+    category: "Entrepreneurship",
+    icon: "🏪",
+    amount: "Subsidy up to ₹25L (25-35% of project cost)",
+    eligibility: "Age above 18, Class 8 pass for projects above ₹10L",
+    deadline: "Rolling",
+    link: "https://www.kviconline.gov.in/pmegpeportal",
+    tags: ["Entrepreneurship", "Loan", "Subsidy"],
+    description: "Start your own business with government subsidy on bank loans for manufacturing or service enterprises."
+  },
+  {
+    id: "mudra",
+    name: "MUDRA Loan (Pradhan Mantri)",
+    nameHi: "मुद्रा लोन",
+    category: "Micro Finance",
+    icon: "💳",
+    amount: "Loan up to ₹10 Lakhs",
+    eligibility: "Non-corporate small businesses, no collateral required",
+    deadline: "Rolling",
+    link: "https://www.mudra.org.in",
+    tags: ["Business Loan", "No Collateral", "Self-Employment"],
+    description: "Collateral-free business loans under Shishu (up to ₹50K), Kishore (₹50K-5L), Tarun (₹5L-10L) categories."
+  },
+  {
+    id: "startup-india",
+    name: "Startup India Seed Fund",
+    nameHi: "स्टार्टअप इंडिया सीड फंड",
+    category: "Startup",
+    icon: "🚀",
+    amount: "Up to ₹20 Lakhs",
+    eligibility: "DPIIT recognized startup, incorporated after 2016",
+    deadline: "Rolling",
+    link: "https://startupindia.gov.in",
+    tags: ["Startup", "Innovation", "Funding"],
+    description: "Seed funding support to startups for proof of concept, prototype development, product trials."
+  },
+  {
+    id: "pm-scholarship",
+    name: "PM Scholarship Scheme (Ex-Servicemen)",
+    nameHi: "प्रधान मंत्री छात्रवृत्ति योजना",
+    category: "Scholarship",
+    icon: "🎖️",
+    amount: "₹2,500-3,000/month",
+    eligibility: "Wards of Ex-servicemen/Ex-Coast Guard, First year of degree/diploma",
+    deadline: "September 15 annually",
+    link: "https://ksb.gov.in",
+    tags: ["Scholarship", "Technical", "Professional Courses"],
+    description: "Monthly scholarship for wards of ex-servicemen pursuing technical and professional education."
+  },
+  {
+    id: "swayam",
+    name: "SWAYAM Free Online Courses",
+    nameHi: "स्वयं मुफ्त ऑनलाइन कोर्सेज",
+    category: "Learning",
+    icon: "💻",
+    amount: "Free (₹1,100 for certificate exam)",
+    eligibility: "Any student or working professional",
+    deadline: "New courses open each semester",
+    link: "https://swayam.gov.in",
+    tags: ["Free", "Online", "Certificate", "All India"],
+    description: "1900+ MOOC courses from top Indian universities, free to learn, affordable certification."
+  },
+  {
+    id: "skill-india",
+    name: "Skill India Digital (SID)",
+    nameHi: "स्किल इंडिया डिजिटल",
+    category: "Skill Training",
+    icon: "📱",
+    amount: "Free Training",
+    eligibility: "Any Indian citizen",
+    deadline: "Rolling",
+    link: "https://skillindia.gov.in",
+    tags: ["Digital Skills", "Free", "AI", "Technology"],
+    description: "Free training in digital skills, AI, cybersecurity, and emerging technologies to make India digitally empowered."
+  },
+  {
+    id: "nabard",
+    name: "NABARD Rural Development Fund",
+    nameHi: "नाबार्ड ग्रामीण विकास निधि",
+    category: "Agriculture Finance",
+    icon: "🌾",
+    amount: "Varies by project",
+    eligibility: "Farmers, rural cooperative societies, NGOs",
+    deadline: "Rolling",
+    link: "https://www.nabard.org",
+    tags: ["Agriculture", "Rural", "Cooperative"],
+    description: "Financial support for rural infrastructure, agriculture, and allied activities across India."
+  },
+];
+
+export const MENTORS = [
+  {
+    id: "m1",
+    name: "Priya Sharma",
+    role: "Senior Software Engineer",
+    company: "TCS, Mumbai",
+    background: "From Rajasthan, Class 10 from government school. Now mentors 50+ rural students annually.",
+    expertise: ["Software Development", "Career Transitions", "STEM for Girls"],
+    languages: ["Hindi", "English"],
+    availability: "Weekends",
+    sessions: 124,
+    rating: 4.9,
+    avatar: "PS",
+    tags: ["Tech", "Women in STEM", "First-Gen Graduate"],
+    careerIds: ["software-dev", "data-analyst"]
+  },
+  {
+    id: "m2",
+    name: "Ramesh Kumar Yadav",
+    role: "Agricultural Officer",
+    company: "Government of UP",
+    background: "B.Sc Agriculture from BHU. Expert in modern farming technology and government schemes.",
+    expertise: ["Agriculture Technology", "Government Schemes", "Rural Entrepreneurship"],
+    languages: ["Hindi", "Bhojpuri"],
+    availability: "Evenings",
+    sessions: 89,
+    rating: 4.8,
+    avatar: "RY",
+    tags: ["Agriculture", "Govt Schemes", "Rural"],
+    careerIds: ["agri-tech", "entrepreneur"]
+  },
+  {
+    id: "m3",
+    name: "Sunita Devi",
+    role: "Self-Employed Beautician & Trainer",
+    company: "Own Salon, Patna",
+    background: "Started with PMKVY training. Now owns 3 salons and trains 20+ girls monthly in beauty courses.",
+    expertise: ["Beauty & Wellness", "Entrepreneurship", "Women Empowerment"],
+    languages: ["Hindi", "Maithili"],
+    availability: "Flexible",
+    sessions: 210,
+    rating: 5.0,
+    avatar: "SD",
+    tags: ["Vocational", "Women", "Entrepreneur"],
+    careerIds: ["beautician", "entrepreneur"]
+  },
+  {
+    id: "m4",
+    name: "Arjun Mehta",
+    role: "CA & Financial Advisor",
+    company: "Independent Practice, Jaipur",
+    background: "First CA from his village in Barmer. Now provides free finance education sessions to rural youth.",
+    expertise: ["Accounting", "Commerce", "CA Exam Prep", "Small Business Finance"],
+    languages: ["Hindi", "English", "Marwari"],
+    availability: "Sundays",
+    sessions: 67,
+    rating: 4.7,
+    avatar: "AM",
+    tags: ["Commerce", "CA", "Finance"],
+    careerIds: ["accountant", "entrepreneur"]
+  },
+  {
+    id: "m5",
+    name: "Dr. Kavitha Nair",
+    role: "Community Health Officer",
+    company: "PHC, Tamil Nadu",
+    background: "MBBS from government college. Champions rural healthcare access and trains ASHA workers.",
+    expertise: ["Healthcare Careers", "NEET Preparation", "Community Health"],
+    languages: ["Tamil", "English", "Hindi"],
+    availability: "Mornings",
+    sessions: 156,
+    rating: 4.9,
+    avatar: "KN",
+    tags: ["Healthcare", "NEET", "Women in Medicine"],
+    careerIds: ["nurse", "health-worker"]
+  },
+];
+
+export const EXAMS = [
+  { id: "jee-main", name: "JEE Main", category: "Engineering", date: "Jan & April 2027", eligibility: "Class 12 PCM, no age limit", prep: ["NCERT Class 11-12", "SWAYAM JEE Prep", "Mock tests"], link: "https://jeemain.nta.ac.in" },
+  { id: "neet", name: "NEET UG", category: "Medical", date: "May 2027", eligibility: "Class 12 PCB, 17+ years", prep: ["NCERT Biology/Physics/Chemistry", "SWAYAM: Biology for NEET"], link: "https://neet.nta.nic.in" },
+  { id: "cuet", name: "CUET (Central University Entrance)", category: "Multi-domain", date: "May 2027", eligibility: "Class 12 any stream", prep: ["NCERT content", "DIKSHA preparation materials"], link: "https://cuet.samarth.ac.in" },
+  { id: "ctet", name: "CTET (Teacher Eligibility)", category: "Teaching", date: "December 2026", eligibility: "Graduation + D.El.Ed or B.Ed", prep: ["Child Development & Pedagogy", "SWAYAM Education courses"], link: "https://ctet.nic.in" },
+  { id: "ibps-rrb", name: "IBPS RRB (Rural Bank)", category: "Banking", date: "August 2027", eligibility: "Any graduate, age 18-30", prep: ["Quantitative Aptitude", "General Awareness", "Hindi"], link: "https://www.ibps.in" },
+  { id: "ssc-chsl", name: "SSC CHSL", category: "Government Job", date: "March 2027", eligibility: "Class 12 pass, age 18-27", prep: ["General Intelligence", "English", "Quantitative Aptitude"], link: "https://ssc.nic.in" },
+  { id: "iti-ncvt", name: "ITI NCVT Exam", category: "Vocational", date: "April & October", eligibility: "Class 8/10 pass", prep: ["Trade theory", "Practical skills"], link: "https://ncvtmis.gov.in" },
+  { id: "icar-aieea", name: "ICAR AIEEA", category: "Agriculture", date: "July 2027", eligibility: "Class 12 PCM/PCB/Agriculture", prep: ["SWAYAM: Agriculture Science"], link: "https://icar.org.in" },
+];
+
+export const COURSES = [
+  { id: "c1", platform: "SWAYAM", name: "Introduction to Programming in Python", duration: "8 weeks", free: true, certificate: true, domain: "Technology", level: "Beginner" },
+  { id: "c2", platform: "DIKSHA", name: "Class 10 Mathematics Mastery", duration: "Self-paced", free: true, certificate: false, domain: "Foundation", level: "Class 10" },
+  { id: "c3", platform: "SWAYAM", name: "Entrepreneurship & Small Business Management", duration: "12 weeks", free: true, certificate: true, domain: "Business", level: "Any" },
+  { id: "c4", platform: "Skill India Digital", name: "AI & Emerging Technologies Basics", duration: "4 weeks", free: true, certificate: true, domain: "Technology", level: "Beginner" },
+  { id: "c5", platform: "PMKVY", name: "Electrician Trade - NSQF Level 3", duration: "2 years", free: true, certificate: true, domain: "Vocational", level: "Class 8+" },
+  { id: "c6", platform: "SWAYAM", name: "Financial Literacy for All", duration: "6 weeks", free: true, certificate: true, domain: "Finance", level: "Any" },
+  { id: "c7", platform: "SWAYAM", name: "Sustainable Agriculture Practices", duration: "10 weeks", free: true, certificate: true, domain: "Agriculture", level: "Any" },
+  { id: "c8", platform: "DIKSHA", name: "Hindi & Communication Skills", duration: "Self-paced", free: true, certificate: false, domain: "Language", level: "Any" },
+  { id: "c9", platform: "PMKVY", name: "Beauty & Wellness - NSQF Level 4", duration: "6 months", free: true, certificate: true, domain: "Vocational", level: "Class 8+" },
+  { id: "c10", platform: "SWAYAM", name: "Data Analytics for Beginners", duration: "8 weeks", free: true, certificate: true, domain: "Technology", level: "Intermediate" },
+];
+
+export const TRANSLATIONS = {
+  en: {
+    appName: "VidyaSetu",
+    tagline: "Your Bridge to a Better Future",
+    welcome: "Welcome to VidyaSetu",
+    discover: "Discover",
+    learn: "Learn",
+    opportunities: "Opportunities",
+    connect: "Connect & Earn",
+    facilitator: "Facilitator",
+    home: "Home",
+    startJourney: "Start Your Journey",
+    voicePrompt: "Tap the mic and tell us about yourself",
+    askMe: "Ask me anything...",
+    typing: "AI is thinking...",
+    yourProfile: "Your Profile",
+    careerMatches: "Career Matches",
+    learningPath: "Your Learning Path",
+    scholarships: "Scholarships",
+    mentors: "Find a Mentor",
+    language: "Language",
+  },
+  hi: {
+    appName: "विद्यासेतु",
+    tagline: "एक बेहतर भविष्य का आपका सेतु",
+    welcome: "विद्यासेतु में आपका स्वागत है",
+    discover: "खोजें",
+    learn: "सीखें",
+    opportunities: "अवसर",
+    connect: "जुड़ें और कमाएं",
+    facilitator: "सुविधाकर्ता",
+    home: "होम",
+    startJourney: "अपनी यात्रा शुरू करें",
+    voicePrompt: "माइक दबाएं और अपने बारे में बताएं",
+    askMe: "कुछ भी पूछें...",
+    typing: "AI सोच रहा है...",
+    yourProfile: "आपकी प्रोफाइल",
+    careerMatches: "करियर विकल्प",
+    learningPath: "आपका सीखने का रास्ता",
+    scholarships: "छात्रवृत्ति",
+    mentors: "मेंटर खोजें",
+    language: "भाषा",
+  }
+};
+
+export const AI_CAREER_RESPONSES: Record<string, string[]> = {
+  art: ["graphic-designer", "content-creator", "fashion-design"],
+  creative: ["graphic-designer", "content-creator", "fashion-design"],
+  painting: ["graphic-designer", "content-creator"],
+  drawing: ["graphic-designer", "fashion-design"],
+  farming: ["agri-tech", "food-processing", "entrepreneur"],
+  agriculture: ["agri-tech", "food-processing"],
+  science: ["nurse", "health-worker", "agri-tech", "software-dev"],
+  math: ["software-dev", "data-analyst", "accountant"],
+  computer: ["software-dev", "data-analyst", "mobile-repair"],
+  phone: ["mobile-repair", "content-creator"],
+  doctor: ["nurse", "health-worker"],
+  health: ["nurse", "health-worker", "yoga-trainer"],
+  teach: ["teacher", "social-worker"],
+  help: ["social-worker", "teacher", "health-worker"],
+  business: ["entrepreneur", "accountant", "fashion-design"],
+  money: ["accountant", "entrepreneur", "driver-logistics"],
+  driving: ["driver-logistics"],
+  food: ["food-processing", "entrepreneur"],
+  beauty: ["beautician", "yoga-trainer"],
+  fashion: ["fashion-design", "beautician"],
+  sports: ["yoga-trainer", "teacher"],
+  yoga: ["yoga-trainer"],
+  repair: ["electrician", "mobile-repair", "welder"],
+  electric: ["electrician"],
+  weld: ["welder"],
+  default: ["software-dev", "electrician", "nurse", "teacher", "entrepreneur"]
+};
