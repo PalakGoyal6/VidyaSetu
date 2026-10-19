@@ -26,9 +26,36 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
   const [isOnline, setIsOnline] = useState(true);
   const [dataSaver, setDataSaver] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   const t = TRANSLATIONS[lang] || TRANSLATIONS['en'];
   const currentLangObj = BHASHINI_LANGUAGES.find(l => l.id === lang) || BHASHINI_LANGUAGES[0];
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('vidyasetu_theme') as 'dark' | 'light' | null;
+      const initial = saved || 'dark';
+      setTheme(initial);
+      document.documentElement.setAttribute('data-theme', initial);
+    } catch (e) {}
+
+    const handleThemeChange = () => {
+      const current = (document.documentElement.getAttribute('data-theme') as 'dark' | 'light') || 'dark';
+      setTheme(current);
+    };
+    window.addEventListener('themechange', handleThemeChange);
+    return () => window.removeEventListener('themechange', handleThemeChange);
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    try {
+      localStorage.setItem('vidyasetu_theme', nextTheme);
+    } catch (e) {}
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    window.dispatchEvent(new Event('themechange'));
+  };
 
   useEffect(() => {
     setMobileOpen(false);
@@ -133,13 +160,49 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
           ))}
         </nav>
 
-        {/* Data Saver Mode & BHASHINI Language Switcher */}
+        {/* Theme, Data Saver & BHASHINI Language Switcher */}
         <div style={{ padding: '16px 20px', borderTop: '1px solid var(--bg-glass-border)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {/* Theme Switcher Toggle */}
+          <button
+            onClick={toggleTheme}
+            style={{
+              width: '100%',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--bg-glass-border)',
+              color: 'var(--text-primary)',
+              padding: '7px 12px',
+              borderRadius: 8,
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              fontSize: '0.78rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              boxShadow: 'var(--shadow-sm)',
+              transition: 'all 0.2s ease',
+            }}
+            title={theme === 'dark' ? 'Switch to Light Cream Mode' : 'Switch to Dark Mode'}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span>{theme === 'dark' ? '🌙' : '☀️'}</span>
+              <span style={{ fontWeight: 600 }}>{theme === 'dark' ? 'Dark Display UI' : 'Light Cream UI'}</span>
+            </span>
+            <span style={{
+              fontSize: '0.65rem',
+              padding: '2px 6px',
+              borderRadius: 6,
+              background: 'var(--bg-glass)',
+              border: '1px solid var(--bg-glass-border)',
+              color: 'var(--primary-light)',
+            }}>
+              {theme === 'dark' ? 'Dark' : 'Light'}
+            </span>
+          </button>
+
           {/* Low Bandwidth Toggle */}
           <button
             onClick={toggleDataSaver}
             style={{
-              width: '100%', background: dataSaver ? 'rgba(21, 128, 61, 0.12)' : '#ffffff',
+              width: '100%', background: dataSaver ? 'rgba(21, 128, 61, 0.12)' : 'var(--bg-card)',
               border: `1px solid ${dataSaver ? 'var(--success)' : 'var(--bg-glass-border)'}`,
               color: dataSaver ? 'var(--success)' : 'var(--text-secondary)',
               padding: '6px 10px', borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit',
@@ -155,7 +218,7 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
             <button
               onClick={() => setShowLangMenu(!showLangMenu)}
               style={{
-                width: '100%', background: '#ffffff', border: '1px solid var(--bg-glass-border)',
+                width: '100%', background: 'var(--bg-card)', border: '1px solid var(--bg-glass-border)',
                 color: 'var(--text-primary)', padding: '8px 12px', borderRadius: 8,
                 cursor: 'pointer', fontFamily: 'inherit', fontSize: '0.85rem',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -229,11 +292,19 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
             background: 'none', border: 'none', color: 'var(--text-primary)', fontSize: '1.3rem', cursor: 'pointer',
           }}>☰</button>
           <span style={{ fontWeight: 700 }}>VidyaSetu</span>
-          <button
-            onClick={() => setShowLangMenu(!showLangMenu)}
-            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem' }}>
-            🌐 {currentLangObj.flag}
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <button
+              onClick={toggleTheme}
+              style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', fontSize: '1.1rem' }}
+              title="Toggle Theme">
+              {theme === 'dark' ? '🌙' : '☀️'}
+            </button>
+            <button
+              onClick={() => setShowLangMenu(!showLangMenu)}
+              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem' }}>
+              🌐 {currentLangObj.flag}
+            </button>
+          </div>
         </div>
         {children}
       </main>

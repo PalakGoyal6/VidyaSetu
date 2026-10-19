@@ -295,7 +295,7 @@ export default function OpportunitiesPage() {
                   <button key={st} onClick={() => setAisheState(st)} style={{
                     padding: '6px 14px', borderRadius: 100, fontSize: '0.8rem', fontWeight: 600,
                     cursor: 'pointer', fontFamily: 'inherit',
-                    background: aisheState === st ? 'var(--gradient-primary)' : '#ffffff',
+                    background: aisheState === st ? 'var(--gradient-primary)' : 'var(--bg-card)',
                     color: aisheState === st ? 'white' : 'var(--text-secondary)',
                     boxShadow: 'var(--shadow-sm)',
                     border: `1px solid ${aisheState === st ? 'transparent' : 'var(--bg-glass-border)'}`,

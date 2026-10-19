@@ -487,9 +487,9 @@ export default function DiscoverPage() {
                     title={lang === 'hi' ? 'बदलने के लिए क्लिक करें' : 'Click to edit'}
                     style={{
                       padding: '10px 12px', borderRadius: 8,
-                      background: val ? '#ffffff' : '#ffffff',
-                      border: `1px solid ${val ? 'rgba(234, 88, 12, 0.35)' : 'var(--bg-glass-border)'}`,
-                      boxShadow: val ? '0 2px 6px rgba(234, 88, 12, 0.08)' : 'var(--shadow-sm)',
+                      background: val ? 'var(--bg-glass)' : 'var(--bg-card)',
+                      border: `1px solid ${val ? 'var(--primary-light)' : 'var(--bg-glass-border)'}`,
+                      boxShadow: 'var(--shadow-sm)',
                       cursor: 'pointer',
                       transition: 'all 0.15s ease',
                     }}>

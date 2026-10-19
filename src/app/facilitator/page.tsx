@@ -367,7 +367,7 @@ export default function FacilitatorPage() {
                         <button key={opt.value} onClick={() => setModuleForm(p => ({ ...p, pricing: opt.value }))} style={{
                           flex: 1, padding: '12px', borderRadius: 10, cursor: 'pointer', fontFamily: 'inherit',
                           border: `2px solid ${moduleForm.pricing === opt.value ? 'var(--primary)' : 'var(--bg-glass-border)'}`,
-                          background: moduleForm.pricing === opt.value ? '#fff3e6' : '#ffffff',
+                          background: moduleForm.pricing === opt.value ? 'var(--bg-glass)' : 'var(--bg-card)',
                           boxShadow: 'var(--shadow-sm)',
                           textAlign: 'center', transition: 'all 0.2s',
                         }}>

@@ -1,12 +1,39 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { TRANSLATIONS } from '@/lib/data';
 
 export default function HomePage() {
   const [lang, setLang] = useState<'en' | 'hi'>('en');
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const t = TRANSLATIONS[lang];
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('vidyasetu_theme') as 'dark' | 'light' | null;
+      const initial = saved || 'dark';
+      setTheme(initial);
+      document.documentElement.setAttribute('data-theme', initial);
+    } catch (e) {}
+
+    const handleThemeChange = () => {
+      const current = (document.documentElement.getAttribute('data-theme') as 'dark' | 'light') || 'dark';
+      setTheme(current);
+    };
+    window.addEventListener('themechange', handleThemeChange);
+    return () => window.removeEventListener('themechange', handleThemeChange);
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    try {
+      localStorage.setItem('vidyasetu_theme', nextTheme);
+    } catch (e) {}
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    window.dispatchEvent(new Event('themechange'));
+  };
 
   const stats = [
     { value: '600M+', label: lang === 'hi' ? 'ग्रामीण युवा' : 'Rural Youth in India', icon: '👥' },
@@ -90,15 +117,15 @@ export default function HomePage() {
       {/* Ambient background */}
       <div style={{
         position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', zIndex: 0,
-        background: 'radial-gradient(ellipse at 20% 20%, rgba(234,88,12,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(22,163,74,0.06) 0%, transparent 50%)',
+        background: 'radial-gradient(ellipse at 20% 20%, var(--ambient-radial-1) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, var(--ambient-radial-2) 0%, transparent 50%)',
       }} />
 
       {/* Nav */}
       <nav style={{
         position: 'sticky', top: 0, zIndex: 50,
-        background: 'rgba(251, 249, 245, 0.92)', backdropFilter: 'blur(20px)',
+        background: 'var(--bg-nav)', backdropFilter: 'blur(20px)',
         borderBottom: '1px solid var(--bg-glass-border)',
-        boxShadow: '0 2px 10px rgba(60,40,20,0.03)',
+        boxShadow: 'var(--shadow-sm)',
         padding: '0 32px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         height: 64,
@@ -116,11 +143,26 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <button
+            onClick={toggleTheme}
+            style={{
+              background: 'var(--bg-glass)', border: '1px solid var(--bg-glass-border)',
+              color: 'var(--text-primary)', padding: '6px 12px', borderRadius: 8,
+              cursor: 'pointer', fontFamily: 'inherit', fontSize: '0.85rem',
+              display: 'flex', alignItems: 'center', gap: 6,
+              boxShadow: 'var(--shadow-sm)',
+              transition: 'all 0.2s ease',
+            }}
+            title={theme === 'dark' ? 'Switch to Light Cream Theme' : 'Switch to Dark Mode'}
+          >
+            <span>{theme === 'dark' ? '🌙' : '☀️'}</span>
+            <span style={{ fontSize: '0.78rem', fontWeight: 600 }}>{theme === 'dark' ? 'Dark' : 'Light'}</span>
+          </button>
           <button
             onClick={() => setLang(lang === 'en' ? 'hi' : 'en')}
             style={{
-              background: '#ffffff', border: '1px solid var(--bg-glass-border)',
+              background: 'var(--bg-glass)', border: '1px solid var(--bg-glass-border)',
               color: 'var(--text-secondary)', padding: '6px 14px', borderRadius: 8,
               cursor: 'pointer', fontFamily: 'inherit', fontSize: '0.85rem',
               display: 'flex', alignItems: 'center', gap: 6,
@@ -148,12 +190,7 @@ export default function HomePage() {
               {lang === 'hi' ? 'रोजगार का सेतु' : 'Student\'s Dream'}
             </span>
             <br />
-            <span style={{
-              background: 'linear-gradient(135deg, #16a34a, #15803d)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}>
+            <span className="gradient-text-accent">
               {lang === 'hi' ? 'विद्यासेतु' : 'to Livelihood'}
             </span>
           </h1>
@@ -176,7 +213,7 @@ export default function HomePage() {
             </Link>
             <Link href="/facilitator" style={{
               display: 'inline-flex', alignItems: 'center', gap: 10,
-              background: '#ffffff', color: 'var(--text-primary)',
+              background: 'var(--bg-glass)', color: 'var(--text-primary)',
               padding: '16px 32px', borderRadius: 14, fontWeight: 600, fontSize: '1.05rem',
               textDecoration: 'none', border: '1px solid var(--bg-glass-border)',
               boxShadow: 'var(--shadow-sm)',
@@ -215,17 +252,17 @@ export default function HomePage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, position: 'relative' }}>
             <div style={{
               position: 'absolute', top: 40, left: '12%', right: '12%',
-              height: 2, background: 'linear-gradient(90deg, var(--primary), var(--success))',
+              height: 2, background: 'linear-gradient(90deg, var(--primary), var(--accent))',
               opacity: 0.3,
             }} />
             {journeySteps.map((s, i) => (
               <div key={i} style={{ textAlign: 'center', position: 'relative' }}>
                 <div style={{
                   width: 64, height: 64, borderRadius: '50%',
-                  background: '#ffffff', border: '2px solid var(--bg-glass-border)',
+                  background: 'var(--bg-card)', border: '2px solid var(--bg-glass-border)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: '1.8rem', margin: '0 auto 16px', position: 'relative', zIndex: 1,
-                  boxShadow: '0 4px 16px rgba(234,88,12,0.12)',
+                  boxShadow: '0 0 20px rgba(99,102,241,0.2)',
                 }}>{s.icon}</div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--accent)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 4 }}>STEP {s.step}</div>
                 <div style={{ fontWeight: 700, marginBottom: 4 }}>{s.title}</div>
@@ -331,7 +368,7 @@ export default function HomePage() {
             display: 'inline-flex', alignItems: 'center', gap: 10,
             background: 'var(--gradient-primary)', color: 'white',
             padding: '16px 40px', borderRadius: 14, fontWeight: 700, fontSize: '1.1rem',
-            textDecoration: 'none', boxShadow: '0 4px 25px rgba(234,88,12,0.35)',
+            textDecoration: 'none', boxShadow: 'var(--shadow-glow)',
           }}>
             🎙️ {lang === 'hi' ? 'अभी शुरू करें — मुफ़्त है' : 'Start Now — It\'s Free'}
           </Link>

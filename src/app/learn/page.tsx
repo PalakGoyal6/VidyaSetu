@@ -126,13 +126,13 @@ function LearnPageContent() {
             {filteredCareers.map(career => (
               <button key={career.id} onClick={() => setSelectedCareerId(career.id)} style={{
                 width: '100%', textAlign: 'left',
-                background: selectedCareerId === career.id ? '#ffffff' : 'transparent',
+                background: selectedCareerId === career.id ? 'var(--bg-card)' : 'transparent',
                 border: `1px solid ${selectedCareerId === career.id ? 'var(--primary)' : 'transparent'}`,
                 boxShadow: selectedCareerId === career.id ? 'var(--shadow-sm)' : 'none',
                 borderRadius: 10, padding: '10px 12px', cursor: 'pointer', fontFamily: 'inherit',
                 transition: 'all 0.15s', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 10,
               }}
-                onMouseEnter={e => { if (selectedCareerId !== career.id) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(234,88,12,0.06)'; }}
+                onMouseEnter={e => { if (selectedCareerId !== career.id) (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-glass)'; }}
                 onMouseLeave={e => { if (selectedCareerId !== career.id) (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
                 <span style={{ fontSize: '1.3rem' }}>{career.icon}</span>
                 <div style={{ flex: 1 }}>
