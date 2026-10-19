@@ -602,6 +602,17 @@ export const AISHE_INSTITUTIONS = [
 
 
 export const AI_CAREER_RESPONSES: Record<string, string[]> = {
+  pcm: ["software-dev", "data-analyst", "electrician"],
+  pcb: ["nurse", "health-worker", "yoga-trainer"],
+  pcmb: ["software-dev", "nurse", "data-analyst", "agri-tech"],
+  commerce: ["accountant", "entrepreneur", "data-analyst"],
+  arts: ["graphic-designer", "content-creator", "teacher"],
+  humanities: ["teacher", "social-worker", "content-creator"],
+  tech: ["software-dev", "data-analyst", "mobile-repair"],
+  technology: ["software-dev", "data-analyst", "mobile-repair"],
+  coding: ["software-dev", "data-analyst"],
+  programming: ["software-dev", "data-analyst"],
+  engineering: ["software-dev", "electrician", "agri-tech"],
   art: ["graphic-designer", "content-creator", "fashion-design"],
   creative: ["graphic-designer", "content-creator", "fashion-design"],
   painting: ["graphic-designer", "content-creator"],
