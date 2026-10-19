@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import AppShell from '@/components/AppShell';
-import { CAREERS } from '@/lib/data';
+import { CAREERS, AI_CAREER_RESPONSES } from '@/lib/data';
 
 interface Message {
   id: string;
@@ -20,6 +20,20 @@ interface Profile {
   goals?: string;
 }
 
+function getSuggestedCareersForProfile(prof: Profile): string[] {
+  const allMatches = new Set<string>();
+  const searchText = `${prof.interests || ''} ${prof.goals || ''}`.toLowerCase();
+  Object.entries(AI_CAREER_RESPONSES).forEach(([keyword, careerIds]) => {
+    if (searchText.includes(keyword)) {
+      careerIds.forEach(id => allMatches.add(id));
+    }
+  });
+  if (allMatches.size === 0) {
+    AI_CAREER_RESPONSES.default.forEach(id => allMatches.add(id));
+  }
+  return Array.from(allMatches).slice(0, 5);
+}
+
 export default function DiscoverPage() {
   const [lang, setLang] = useState<string>('en');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -28,6 +42,8 @@ export default function DiscoverPage() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [profile, setProfile] = useState<Profile>({});
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editForm, setEditForm] = useState<Profile>({});
   const [suggestedCareers, setSuggestedCareers] = useState<string[]>([]);
   const [conversationHistory, setConversationHistory] = useState<string[]>([]);
   const [profileCompletion, setProfileCompletion] = useState(0);
@@ -35,6 +51,20 @@ export default function DiscoverPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null);
   const greetedRef = useRef(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('vidyasetu_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setProfile(parsed);
+        const matches = getSuggestedCareersForProfile(parsed);
+        if (matches.length > 0) setSuggestedCareers(matches);
+      }
+    } catch {
+      // ignore storage error
+    }
+  }, []);
 
   useEffect(() => {
     // Auto-start with greeting (guard against StrictMode double-invoke)
@@ -53,6 +83,13 @@ export default function DiscoverPage() {
     const fields = ['currentClass', 'state', 'interests', 'name', 'goals'];
     const filled = fields.filter(f => (profile as Record<string, unknown>)[f]).length;
     setProfileCompletion(Math.round((filled / fields.length) * 100));
+    try {
+      if (Object.keys(profile).length > 0) {
+        localStorage.setItem('vidyasetu_profile', JSON.stringify(profile));
+      }
+    } catch {
+      // ignore storage error
+    }
   }, [profile]);
 
   const handleSend = async (text: string) => {
@@ -146,6 +183,66 @@ export default function DiscoverPage() {
   const quickResponses = lang === 'hi'
     ? ['मुझे कंप्यूटर पसंद है', 'मैं खेती में रुचि रखता हूं', 'मुझे पढ़ाना पसंद है', 'मैं व्यापार करना चाहता हूं', 'मुझे कला पसंद है', 'स्वास्थ्य में काम करना चाहता हूं']
     : ['I love computers', 'I\'m interested in farming', 'I enjoy teaching others', 'I want to start a business', 'I love art & design', 'I want to work in healthcare'];
+
+  const openEditModal = () => {
+    setEditForm({ ...profile });
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveProfile = () => {
+    const updated = { ...editForm };
+    setProfile(updated);
+    const newSuggested = getSuggestedCareersForProfile(updated);
+    if (newSuggested.length > 0) {
+      setSuggestedCareers(newSuggested);
+    }
+    setIsEditModalOpen(false);
+
+    const summaryParts = [
+      updated.name ? `${updated.name}` : '',
+      updated.currentClass ? `${updated.currentClass}` : '',
+      updated.state ? `${updated.state}` : '',
+      updated.interests ? `${updated.interests}` : '',
+    ].filter(Boolean).join(', ');
+
+    const confirmationText = lang === 'hi'
+      ? `धन्यवाद! आपकी प्रोफाइल (${summaryParts}) अपडेट हो गई है। मैंने आपके लिए उपयुक्त करियर मैच और रोडमैप तैयार कर दिए हैं! 🎯`
+      : `Thank you! Your profile (${summaryParts}) has been updated. I've refreshed your personalized career matches and roadmaps! 🎯`;
+    
+    setMessages(prev => [...prev, {
+      id: Date.now().toString(),
+      role: 'ai',
+      text: confirmationText,
+      timestamp: new Date()
+    }]);
+  };
+
+  const applySample = (type: 'tech' | 'agri' | 'health') => {
+    const samples: Record<'tech' | 'agri' | 'health', Profile> = {
+      tech: {
+        name: 'Ravi Kumar',
+        currentClass: 'Class 10',
+        state: 'Uttar Pradesh',
+        interests: 'computer, math, coding',
+        goals: 'Software Developer'
+      },
+      agri: {
+        name: 'Mohan Lal',
+        currentClass: 'Class 11',
+        state: 'Madhya Pradesh',
+        interests: 'farming, agriculture, science',
+        goals: 'Agricultural Technologist'
+      },
+      health: {
+        name: 'Priya Sharma',
+        currentClass: 'Class 12',
+        state: 'Rajasthan',
+        interests: 'health, doctor, biology',
+        goals: 'Nursing Professional'
+      }
+    };
+    setEditForm(samples[type]);
+  };
 
   const profileLabels: Record<string, [string, string]> = {
     name: ['Name', 'नाम'],
@@ -340,7 +437,29 @@ export default function DiscoverPage() {
         {/* Profile Panel */}
         <div style={{ width: 320, background: 'var(--bg-secondary)', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
           <div style={{ padding: '20px 20px 0' }}>
-            <h4 style={{ marginBottom: 16 }}>{lang === 'hi' ? '📋 आपकी प्रोफाइल' : '📋 Your Profile'}</h4>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <h4 style={{ margin: 0, fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+                📋 {lang === 'hi' ? 'आपकी प्रोफाइल' : 'Your Profile'}
+              </h4>
+              <button
+                onClick={openEditModal}
+                style={{
+                  background: 'rgba(99,102,241,0.15)',
+                  border: '1px solid rgba(99,102,241,0.35)',
+                  color: 'var(--primary-light)',
+                  padding: '4px 10px',
+                  borderRadius: 8,
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  transition: 'all 0.15s ease',
+                }}>
+                ✏️ {lang === 'hi' ? 'भरें / बदलें' : 'Fill / Edit'}
+              </button>
+            </div>
             
             {/* Completion */}
             <div style={{ marginBottom: 20 }}>
@@ -348,33 +467,60 @@ export default function DiscoverPage() {
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                   {lang === 'hi' ? 'प्रोफाइल पूर्णता' : 'Profile Completion'}
                 </span>
-                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary-light)' }}>{profileCompletion}%</span>
+                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: profileCompletion === 100 ? 'var(--success)' : 'var(--primary-light)' }}>
+                  {profileCompletion}%
+                </span>
               </div>
               <div className="progress-bar">
-                <div className="progress-fill" style={{ width: `${profileCompletion}%` }} />
+                <div className="progress-fill" style={{ width: `${profileCompletion}%`, background: profileCompletion === 100 ? 'var(--success)' : undefined }} />
               </div>
             </div>
 
             {/* Profile fields */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 20 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
               {Object.entries(profileLabels).map(([key, [en, hi]]) => {
                 const val = (profile as Record<string, string | undefined>)[key];
                 return (
-                  <div key={key} style={{
-                    padding: '10px 12px', borderRadius: 8,
-                    background: val ? 'rgba(99,102,241,0.1)' : 'var(--bg-glass)',
-                    border: `1px solid ${val ? 'rgba(99,102,241,0.3)' : 'var(--bg-glass-border)'}`,
-                  }}>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: 2 }}>
-                      {lang === 'hi' ? hi : en}
+                  <div
+                    key={key}
+                    onClick={openEditModal}
+                    title={lang === 'hi' ? 'बदलने के लिए क्लिक करें' : 'Click to edit'}
+                    style={{
+                      padding: '10px 12px', borderRadius: 8,
+                      background: val ? 'rgba(99,102,241,0.1)' : 'var(--bg-glass)',
+                      border: `1px solid ${val ? 'rgba(99,102,241,0.3)' : 'var(--bg-glass-border)'}`,
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: 2 }}>
+                      <span>{lang === 'hi' ? hi : en}</span>
+                      <span style={{ opacity: 0.6 }}>✏️</span>
                     </div>
                     <div style={{ fontSize: '0.9rem', color: val ? 'var(--text-primary)' : 'var(--text-muted)', fontWeight: val ? 600 : 400 }}>
-                      {val || (lang === 'hi' ? 'अभी तक नहीं' : 'Not yet shared')}
+                      {val || (lang === 'hi' ? 'अभी तक नहीं (क्लिक करें)' : 'Not yet shared (click to add)')}
                     </div>
                   </div>
                 );
               })}
             </div>
+
+            {/* Quick helper note */}
+            {profileCompletion < 100 && (
+              <div style={{
+                padding: '10px 12px',
+                borderRadius: 8,
+                background: 'rgba(249,115,22,0.08)',
+                border: '1px dashed rgba(249,115,22,0.3)',
+                fontSize: '0.75rem',
+                color: 'var(--text-secondary)',
+                marginBottom: 16,
+                lineHeight: 1.5,
+              }}>
+                💡 {lang === 'hi'
+                  ? 'सुझाव: AI से बोलें "मेरा नाम रवि है, कक्षा 10, राजस्थान से, मुझे कंप्यूटर पसंद है" या ऊपर "भरें / बदलें" दबाएं।'
+                  : 'Tip: Speak to AI or click "Fill / Edit" above to complete your profile & unlock scholarships!'}
+              </div>
+            )}
           </div>
 
           {/* Career Suggestions */}
@@ -446,6 +592,177 @@ export default function DiscoverPage() {
           </div>
         </div>
       </div>
+
+      {/* Edit Profile Modal */}
+      {isEditModalOpen && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 100, padding: 20,
+        }}>
+          <div style={{
+            background: 'var(--bg-card)', border: '1px solid var(--bg-glass-border)',
+            borderRadius: 20, width: '100%', maxWidth: 480, maxHeight: '90vh',
+            display: 'flex', flexDirection: 'column', overflow: 'hidden',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+          }}>
+            <div style={{
+              padding: '20px 24px', borderBottom: '1px solid var(--bg-glass-border)',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            }}>
+              <div>
+                <h3 style={{ fontSize: '1.1rem', margin: 0 }}>
+                  📋 {lang === 'hi' ? 'प्रोफाइल भरें / संपादित करें' : 'Fill / Edit Your Profile'}
+                </h3>
+                <p style={{ margin: '4px 0 0', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                  {lang === 'hi' ? 'यह विवरण आपके लिए सटीक करियर और छात्रवृत्ति खोजने में मदद करता है' : 'This helps AI match you with the right careers & scholarships'}
+                </p>
+              </div>
+              <button
+                onClick={() => setIsEditModalOpen(false)}
+                style={{
+                  background: 'none', border: 'none', color: 'var(--text-muted)',
+                  fontSize: '1.2rem', cursor: 'pointer', padding: 4,
+                }}>
+                ✕
+              </button>
+            </div>
+
+            <div style={{ padding: '20px 24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {/* Quick Presets */}
+              <div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 8 }}>
+                  ⚡ {lang === 'hi' ? 'त्वरित डेमो प्रोफाइल चुनें:' : 'Quick Demo Presets:'}
+                </div>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={() => applySample('tech')}
+                    style={{
+                      background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)',
+                      color: 'var(--primary-light)', padding: '5px 10px', borderRadius: 6,
+                      fontSize: '0.75rem', cursor: 'pointer',
+                    }}>
+                    💻 Tech (Ravi, Class 10)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applySample('agri')}
+                    style={{
+                      background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)',
+                      color: 'var(--success)', padding: '5px 10px', borderRadius: 6,
+                      fontSize: '0.75rem', cursor: 'pointer',
+                    }}>
+                    🌾 Agri (Mohan, Class 11)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applySample('health')}
+                    style={{
+                      background: 'rgba(236,72,153,0.15)', border: '1px solid rgba(236,72,153,0.3)',
+                      color: '#f472b6', padding: '5px 10px', borderRadius: 6,
+                      fontSize: '0.75rem', cursor: 'pointer',
+                    }}>
+                    🏥 Health (Priya, Class 12)
+                  </button>
+                </div>
+              </div>
+
+              {/* Form fields */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 4 }}>
+                  {lang === 'hi' ? 'नाम (Name)' : 'Name'}
+                </label>
+                <input
+                  type="text"
+                  value={editForm.name || ''}
+                  onChange={e => setEditForm({ ...editForm, name: e.target.value })}
+                  placeholder={lang === 'hi' ? 'जैसे: रवि कुमार' : 'e.g. Ravi Kumar'}
+                  className="input"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 8 }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 4 }}>
+                  {lang === 'hi' ? 'कक्षा / शिक्षा स्तर (Class / Grade)' : 'Class / Grade'}
+                </label>
+                <input
+                  type="text"
+                  value={editForm.currentClass || ''}
+                  onChange={e => setEditForm({ ...editForm, currentClass: e.target.value })}
+                  placeholder={lang === 'hi' ? 'जैसे: Class 10, Class 12, ITI' : 'e.g. Class 10, Class 12, ITI'}
+                  className="input"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 8 }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 4 }}>
+                  {lang === 'hi' ? 'राज्य (State)' : 'State'}
+                </label>
+                <input
+                  type="text"
+                  value={editForm.state || ''}
+                  onChange={e => setEditForm({ ...editForm, state: e.target.value })}
+                  placeholder={lang === 'hi' ? 'जैसे: Uttar Pradesh, Rajasthan, Bihar' : 'e.g. Uttar Pradesh, Rajasthan, Bihar'}
+                  className="input"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 8 }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 4 }}>
+                  {lang === 'hi' ? 'रुचियां / पसंदीदा विषय (Interests)' : 'Interests'}
+                </label>
+                <input
+                  type="text"
+                  value={editForm.interests || ''}
+                  onChange={e => setEditForm({ ...editForm, interests: e.target.value })}
+                  placeholder={lang === 'hi' ? 'जैसे: Computer, Math, Farming, Design' : 'e.g. Computer, Math, Farming, Design'}
+                  className="input"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 8 }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: 4 }}>
+                  {lang === 'hi' ? 'करियर लक्ष्य (Career Goals)' : 'Career Goals'}
+                </label>
+                <input
+                  type="text"
+                  value={editForm.goals || ''}
+                  onChange={e => setEditForm({ ...editForm, goals: e.target.value })}
+                  placeholder={lang === 'hi' ? 'जैसे: Software Developer, Electrician' : 'e.g. Software Developer, Electrician'}
+                  className="input"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 8 }}
+                />
+              </div>
+            </div>
+
+            <div style={{
+              padding: '16px 24px', borderTop: '1px solid var(--bg-glass-border)',
+              display: 'flex', justifyContent: 'flex-end', gap: 10,
+            }}>
+              <button
+                type="button"
+                onClick={() => setIsEditModalOpen(false)}
+                className="btn btn-secondary btn-sm"
+              >
+                {lang === 'hi' ? 'रद्द करें' : 'Cancel'}
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveProfile}
+                className="btn btn-primary btn-sm"
+              >
+                💾 {lang === 'hi' ? 'सहेजें' : 'Save Profile'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppShell>
   );
 }

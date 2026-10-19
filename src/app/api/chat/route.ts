@@ -35,13 +35,23 @@ export async function POST(req: NextRequest) {
     if (msgLower.includes(pattern)) { profileFields.state = state; break; }
   }
 
-  const interestKeywords = ['like', 'love', 'enjoy', 'good at', 'interest', 'पसंद', 'अच्छा', 'मुझे'];
-  if (interestKeywords.some(k => msgLower.includes(k))) {
-    const foundInterests: string[] = [];
-    Object.keys(AI_CAREER_RESPONSES).forEach(keyword => {
-      if (msgLower.includes(keyword)) foundInterests.push(keyword);
-    });
-    if (foundInterests.length > 0) profileFields.interests = foundInterests.join(', ');
+  // Detect name
+  const nameMatch = message.match(/(?:my name is|i am|i'm|name is|मेरा नाम|नाम है)\s+([A-Za-z\u0900-\u097F]+)/i);
+  if (nameMatch) {
+    const candidate = nameMatch[1].trim();
+    const blacklist = ['a', 'an', 'in', 'from', 'studying', 'interested', 'here', 'looking', 'good', 'just'];
+    if (!blacklist.includes(candidate.toLowerCase())) {
+      profileFields.name = candidate.charAt(0).toUpperCase() + candidate.slice(1);
+    }
+  }
+
+  // Detect goals
+  const goalMatch = message.match(/(?:want to be|want to become|goal is|aim is|aspire to|dream is|बनना चाहता|बनना चाहती|लक्ष्य है|सपना है|career goal)\s*(?:to be|a|an)?\s*([a-zA-Z\u0900-\u097F\s]+)/i);
+  if (goalMatch) {
+    const rawGoal = goalMatch[1].trim().replace(/[.,!?]+$/, '');
+    if (rawGoal.length > 2 && rawGoal.length < 50) {
+      profileFields.goals = rawGoal.charAt(0).toUpperCase() + rawGoal.slice(1);
+    }
   }
 
   updatedProfile = { ...updatedProfile, ...profileFields };
