@@ -64,14 +64,6 @@ export default function HomePage() {
       color: '#fbbf24',
       badge: lang === 'hi' ? 'PWA • ऑफलाइन' : 'PWA • Offline First',
     },
-    {
-      icon: '🔌',
-      title: lang === 'hi' ? 'ओपन API और इंटरऑपरेबिलिटी' : 'Open APIs & Interoperability',
-      desc: lang === 'hi' ? 'कॉलेज (AISHE), नियोक्ता (NAPS) और एनजीओ के लिए ओपन स्टैंडर्ड्स।' : 'Standards-based REST APIs connecting Colleges, Employers, NGOs & Govt portals.',
-      href: '/interop',
-      color: '#38bdf8',
-      badge: lang === 'hi' ? 'REST API' : 'REST API v1',
-    },
   ];
 
   const govtPartners = [
