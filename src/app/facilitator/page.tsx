@@ -271,8 +271,9 @@ export default function FacilitatorPage() {
                         <h4 style={{ fontSize: '0.95rem' }}>{mod.title}</h4>
                         <span style={{
                           fontSize: '0.7rem', padding: '2px 8px', borderRadius: 100,
-                          background: mod.status === 'published' ? 'rgba(16,185,129,0.2)' : mod.status === 'draft' ? 'rgba(245,158,11,0.2)' : 'rgba(99,102,241,0.2)',
-                          color: mod.status === 'published' ? 'var(--success)' : mod.status === 'draft' ? 'var(--warning)' : 'var(--primary-light)',
+                          background: mod.status === 'published' ? '#f0fdf4' : mod.status === 'draft' ? '#fefce8' : '#fff7ed',
+                          color: mod.status === 'published' ? 'var(--success)' : mod.status === 'draft' ? 'var(--warning)' : 'var(--primary)',
+                          border: `1px solid ${mod.status === 'published' ? '#bbf7d0' : mod.status === 'draft' ? '#fef08a' : '#fed7aa'}`,
                           fontWeight: 700,
                         }}>{mod.status}</span>
                       </div>
@@ -365,11 +366,12 @@ export default function FacilitatorPage() {
                       ].map(opt => (
                         <button key={opt.value} onClick={() => setModuleForm(p => ({ ...p, pricing: opt.value }))} style={{
                           flex: 1, padding: '12px', borderRadius: 10, cursor: 'pointer', fontFamily: 'inherit',
-                          border: `2px solid ${moduleForm.pricing === opt.value ? 'var(--primary-light)' : 'var(--bg-glass-border)'}`,
-                          background: moduleForm.pricing === opt.value ? 'rgba(99,102,241,0.15)' : 'var(--bg-glass)',
+                          border: `2px solid ${moduleForm.pricing === opt.value ? 'var(--primary)' : 'var(--bg-glass-border)'}`,
+                          background: moduleForm.pricing === opt.value ? '#fff3e6' : '#ffffff',
+                          boxShadow: 'var(--shadow-sm)',
                           textAlign: 'center', transition: 'all 0.2s',
                         }}>
-                          <div style={{ fontWeight: 700, color: moduleForm.pricing === opt.value ? 'var(--primary-light)' : 'var(--text-primary)', fontSize: '0.85rem' }}>{opt.label}</div>
+                          <div style={{ fontWeight: 700, color: moduleForm.pricing === opt.value ? 'var(--primary)' : 'var(--text-primary)', fontSize: '0.85rem' }}>{opt.label}</div>
                           <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 2 }}>{opt.desc}</div>
                         </button>
                       ))}

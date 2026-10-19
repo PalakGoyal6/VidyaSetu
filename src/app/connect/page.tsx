@@ -111,9 +111,9 @@ export default function ConnectPage() {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
                     {mentors.map(mentor => (
                       <div key={mentor.id} onClick={() => setSelectedMentor(selectedMentor?.id === mentor.id ? null : mentor)} style={{
-                        background: 'var(--bg-card)', border: `1px solid ${selectedMentor?.id === mentor.id ? 'rgba(99,102,241,0.5)' : 'var(--bg-glass-border)'}`,
+                        background: 'var(--bg-card)', border: `1px solid ${selectedMentor?.id === mentor.id ? 'var(--primary)' : 'var(--bg-glass-border)'}`,
                         borderRadius: 16, padding: '20px', cursor: 'pointer', transition: 'all 0.2s',
-                        boxShadow: selectedMentor?.id === mentor.id ? 'var(--shadow-glow)' : '',
+                        boxShadow: selectedMentor?.id === mentor.id ? '0 4px 20px rgba(234, 88, 12, 0.2)' : 'var(--shadow-sm)',
                       }}
                         onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)'; }}
                         onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = ''; }}>

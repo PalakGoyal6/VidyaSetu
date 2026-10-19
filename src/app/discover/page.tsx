@@ -444,9 +444,9 @@ export default function DiscoverPage() {
               <button
                 onClick={openEditModal}
                 style={{
-                  background: 'rgba(99,102,241,0.15)',
-                  border: '1px solid rgba(99,102,241,0.35)',
-                  color: 'var(--primary-light)',
+                  background: 'rgba(234, 88, 12, 0.1)',
+                  border: '1px solid rgba(234, 88, 12, 0.25)',
+                  color: 'var(--primary)',
                   padding: '4px 10px',
                   borderRadius: 8,
                   fontSize: '0.75rem',
@@ -467,7 +467,7 @@ export default function DiscoverPage() {
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                   {lang === 'hi' ? 'प्रोफाइल पूर्णता' : 'Profile Completion'}
                 </span>
-                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: profileCompletion === 100 ? 'var(--success)' : 'var(--primary-light)' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: profileCompletion === 100 ? 'var(--success)' : 'var(--primary)' }}>
                   {profileCompletion}%
                 </span>
               </div>
@@ -487,8 +487,9 @@ export default function DiscoverPage() {
                     title={lang === 'hi' ? 'बदलने के लिए क्लिक करें' : 'Click to edit'}
                     style={{
                       padding: '10px 12px', borderRadius: 8,
-                      background: val ? 'rgba(99,102,241,0.1)' : 'var(--bg-glass)',
-                      border: `1px solid ${val ? 'rgba(99,102,241,0.3)' : 'var(--bg-glass-border)'}`,
+                      background: val ? '#ffffff' : '#ffffff',
+                      border: `1px solid ${val ? 'rgba(234, 88, 12, 0.35)' : 'var(--bg-glass-border)'}`,
+                      boxShadow: val ? '0 2px 6px rgba(234, 88, 12, 0.08)' : 'var(--shadow-sm)',
                       cursor: 'pointer',
                       transition: 'all 0.15s ease',
                     }}>
@@ -597,7 +598,7 @@ export default function DiscoverPage() {
       {isEditModalOpen && (
         <div style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(8px)',
+          background: 'rgba(28,25,23,0.5)', backdropFilter: 'blur(8px)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           zIndex: 100, padding: 20,
         }}>
@@ -605,7 +606,7 @@ export default function DiscoverPage() {
             background: 'var(--bg-card)', border: '1px solid var(--bg-glass-border)',
             borderRadius: 20, width: '100%', maxWidth: 480, maxHeight: '90vh',
             display: 'flex', flexDirection: 'column', overflow: 'hidden',
-            boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+            boxShadow: '0 20px 50px rgba(60,40,20,0.18)',
           }}>
             <div style={{
               padding: '20px 24px', borderBottom: '1px solid var(--bg-glass-border)',
@@ -640,9 +641,9 @@ export default function DiscoverPage() {
                     type="button"
                     onClick={() => applySample('tech')}
                     style={{
-                      background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)',
-                      color: 'var(--primary-light)', padding: '5px 10px', borderRadius: 6,
-                      fontSize: '0.75rem', cursor: 'pointer',
+                      background: 'rgba(234,88,12,0.1)', border: '1px solid rgba(234,88,12,0.3)',
+                      color: 'var(--primary)', padding: '5px 10px', borderRadius: 6,
+                      fontSize: '0.75rem', cursor: 'pointer', fontWeight: 600,
                     }}>
                     💻 Tech (Ravi, Class 10)
                   </button>
@@ -650,9 +651,9 @@ export default function DiscoverPage() {
                     type="button"
                     onClick={() => applySample('agri')}
                     style={{
-                      background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)',
+                      background: 'rgba(21,128,61,0.1)', border: '1px solid rgba(21,128,61,0.3)',
                       color: 'var(--success)', padding: '5px 10px', borderRadius: 6,
-                      fontSize: '0.75rem', cursor: 'pointer',
+                      fontSize: '0.75rem', cursor: 'pointer', fontWeight: 600,
                     }}>
                     🌾 Agri (Mohan, Class 11)
                   </button>
@@ -660,9 +661,9 @@ export default function DiscoverPage() {
                     type="button"
                     onClick={() => applySample('health')}
                     style={{
-                      background: 'rgba(236,72,153,0.15)', border: '1px solid rgba(236,72,153,0.3)',
-                      color: '#f472b6', padding: '5px 10px', borderRadius: 6,
-                      fontSize: '0.75rem', cursor: 'pointer',
+                      background: 'rgba(13,148,136,0.1)', border: '1px solid rgba(13,148,136,0.3)',
+                      color: '#0d9488', padding: '5px 10px', borderRadius: 6,
+                      fontSize: '0.75rem', cursor: 'pointer', fontWeight: 600,
                     }}>
                     🏥 Health (Priya, Class 12)
                   </button>

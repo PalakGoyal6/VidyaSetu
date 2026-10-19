@@ -261,13 +261,14 @@ export default function OpportunitiesPage() {
             <div>
               {/* AISHE Survey Metrics Bar */}
               <div style={{
-                background: 'linear-gradient(135deg, rgba(79,70,229,0.15), rgba(124,58,237,0.1))',
-                border: '1px solid rgba(99,102,241,0.3)', borderRadius: 16, padding: '18px 20px',
+                background: 'linear-gradient(135deg, rgba(234,88,12,0.06), rgba(21,128,61,0.06))',
+                border: '1px solid rgba(234,88,12,0.2)', borderRadius: 16, padding: '18px 20px',
                 marginBottom: 24, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 16,
+                boxShadow: 'var(--shadow-sm)',
               }}>
                 <div>
                   <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>National Survey Source</div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--primary-light)' }}>AISHE 2023-24</div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--primary)' }}>AISHE 2023-24</div>
                   <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>Ministry of Education</div>
                 </div>
                 <div>
@@ -277,7 +278,7 @@ export default function OpportunitiesPage() {
                 </div>
                 <div>
                   <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Rural GER Index</div>
-                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--accent)' }}>{AISHE_METRICS.ruralGrossEnrollmentRatio}</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--primary)' }}>{AISHE_METRICS.ruralGrossEnrollmentRatio}</div>
                   <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>Target: 50% by 2035</div>
                 </div>
                 <div>
@@ -293,9 +294,11 @@ export default function OpportunitiesPage() {
                 {aisheStates.map(st => (
                   <button key={st} onClick={() => setAisheState(st)} style={{
                     padding: '6px 14px', borderRadius: 100, fontSize: '0.8rem', fontWeight: 600,
-                    border: 'none', cursor: 'pointer', fontFamily: 'inherit',
-                    background: aisheState === st ? 'var(--gradient-primary)' : 'var(--bg-glass)',
-                    color: aisheState === st ? 'white' : 'var(--text-muted)',
+                    cursor: 'pointer', fontFamily: 'inherit',
+                    background: aisheState === st ? 'var(--gradient-primary)' : '#ffffff',
+                    color: aisheState === st ? 'white' : 'var(--text-secondary)',
+                    boxShadow: 'var(--shadow-sm)',
+                    border: `1px solid ${aisheState === st ? 'transparent' : 'var(--bg-glass-border)'}`,
                     transition: 'all 0.2s',
                   }}>{st}</button>
                 ))}
@@ -307,16 +310,17 @@ export default function OpportunitiesPage() {
                   <div key={inst.aisheCode} style={{
                     background: 'var(--bg-card)', border: '1px solid var(--bg-glass-border)',
                     borderRadius: 16, padding: '20px', transition: 'all 0.2s', position: 'relative',
+                    boxShadow: 'var(--shadow-sm)',
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
                       <div>
                         <span style={{
-                          fontSize: '0.65rem', fontWeight: 700, padding: '2px 6px', borderRadius: 4,
-                          background: 'rgba(99,102,241,0.2)', color: 'var(--primary-light)', marginRight: 6,
+                          fontSize: '0.65rem', fontWeight: 700, padding: '2px 8px', borderRadius: 6,
+                          background: '#fff7ed', color: '#c2410c', border: '1px solid #fed7aa', marginRight: 6,
                         }}>AISHE: {inst.aisheCode}</span>
                         <span style={{
-                          fontSize: '0.65rem', fontWeight: 700, padding: '2px 6px', borderRadius: 4,
-                          background: 'rgba(16,185,129,0.2)', color: 'var(--success)',
+                          fontSize: '0.65rem', fontWeight: 700, padding: '2px 8px', borderRadius: 6,
+                          background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0',
                         }}>NAAC {inst.naacGrade}</span>
                       </div>
                       <button

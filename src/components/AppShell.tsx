@@ -99,14 +99,14 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
               fontWeight: 800, color: 'white', fontSize: '1rem',
             }}>V</div>
             <div>
-              <div style={{ fontWeight: 800, color: 'white', lineHeight: 1.2 }}>VidyaSetu</div>
+              <div style={{ fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.2 }}>VidyaSetu</div>
               <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>विद्यासेतु • AI Platform</div>
             </div>
           </Link>
           <div style={{
             marginTop: 8, display: 'inline-flex', alignItems: 'center', gap: 6,
-            background: 'rgba(139, 92, 246, 0.15)', border: '1px solid rgba(139, 92, 246, 0.3)',
-            padding: '2px 8px', borderRadius: 12, fontSize: '0.65rem', color: '#c4b5fd',
+            background: 'rgba(21, 128, 61, 0.08)', border: '1px solid rgba(21, 128, 61, 0.25)',
+            padding: '2px 8px', borderRadius: 12, fontSize: '0.65rem', color: 'var(--success)', fontWeight: 600,
           }}>
             <span>🗣️</span>
             <span>BHASHINI AI Multi-Voice</span>
@@ -126,7 +126,7 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
               {pathname === item.href && (
                 <div style={{
                   marginLeft: 'auto', width: 6, height: 6, borderRadius: '50%',
-                  background: 'var(--primary-light)',
+                  background: 'var(--primary)',
                 }} />
               )}
             </Link>
@@ -139,11 +139,12 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
           <button
             onClick={toggleDataSaver}
             style={{
-              width: '100%', background: dataSaver ? 'rgba(16, 185, 129, 0.2)' : 'var(--bg-glass)',
+              width: '100%', background: dataSaver ? 'rgba(21, 128, 61, 0.12)' : '#ffffff',
               border: `1px solid ${dataSaver ? 'var(--success)' : 'var(--bg-glass-border)'}`,
               color: dataSaver ? 'var(--success)' : 'var(--text-secondary)',
               padding: '6px 10px', borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit',
               fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              boxShadow: 'var(--shadow-sm)',
             }}>
             <span>📶 {dataSaver ? 'Data Saver: ON' : 'Data Saver: OFF'}</span>
             <span style={{ fontSize: '0.65rem', opacity: 0.8 }}>{dataSaver ? '2G/3G Lite' : 'Standard'}</span>
@@ -154,10 +155,11 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
             <button
               onClick={() => setShowLangMenu(!showLangMenu)}
               style={{
-                width: '100%', background: 'var(--bg-glass)', border: '1px solid var(--bg-glass-border)',
+                width: '100%', background: '#ffffff', border: '1px solid var(--bg-glass-border)',
                 color: 'var(--text-primary)', padding: '8px 12px', borderRadius: 8,
                 cursor: 'pointer', fontFamily: 'inherit', fontSize: '0.85rem',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                boxShadow: 'var(--shadow-sm)',
               }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span>🌐</span>
@@ -170,10 +172,10 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
               <div style={{
                 position: 'absolute', bottom: '105%', left: 0, right: 0,
                 background: 'var(--bg-card)', border: '1px solid var(--bg-glass-border)',
-                borderRadius: 10, padding: 6, zIndex: 100, boxShadow: 'var(--shadow-lg)',
+                borderRadius: 10, padding: 6, zIndex: 100, boxShadow: 'var(--shadow-md)',
                 maxHeight: 220, overflowY: 'auto',
               }}>
-                <div style={{ padding: '4px 8px', fontSize: '0.7rem', color: 'var(--text-muted)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                <div style={{ padding: '4px 8px', fontSize: '0.7rem', color: 'var(--text-muted)', borderBottom: '1px solid var(--bg-glass-border)' }}>
                   Bhashini Language Mission
                 </div>
                 {BHASHINI_LANGUAGES.map(l => (
@@ -184,10 +186,11 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
                       setShowLangMenu(false);
                     }}
                     style={{
-                      width: '100%', background: lang === l.id ? 'rgba(79,70,229,0.3)' : 'transparent',
-                      border: 'none', color: 'var(--text-primary)', padding: '8px 10px',
+                      width: '100%', background: lang === l.id ? 'rgba(234,88,12,0.1)' : 'transparent',
+                      border: 'none', color: lang === l.id ? 'var(--primary)' : 'var(--text-primary)', padding: '8px 10px',
                       borderRadius: 6, cursor: 'pointer', textAlign: 'left', fontSize: '0.82rem',
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      fontWeight: lang === l.id ? 600 : 400,
                     }}>
                     <span>{l.native}</span>
                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{l.name}</span>
@@ -223,7 +226,7 @@ export default function AppShell({ children, lang = 'en', onLangChange }: AppShe
           position: 'sticky', top: 0, zIndex: 50,
         }} id="mobile-header">
           <button onClick={() => setMobileOpen(true)} style={{
-            background: 'none', border: 'none', color: 'white', fontSize: '1.3rem', cursor: 'pointer',
+            background: 'none', border: 'none', color: 'var(--text-primary)', fontSize: '1.3rem', cursor: 'pointer',
           }}>☰</button>
           <span style={{ fontWeight: 700 }}>VidyaSetu</span>
           <button
